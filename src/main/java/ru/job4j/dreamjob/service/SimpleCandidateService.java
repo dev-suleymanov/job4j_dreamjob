@@ -12,7 +12,7 @@ public class SimpleCandidateService implements CandidateService {
 
     private final CandidateRepository candidateRepository = MemoryCandidateRepository.getInstance();
 
-    private SimpleCandidateService() {}
+    private SimpleCandidateService() { }
 
     public static SimpleCandidateService getInstance() {
         return INSTANCE;

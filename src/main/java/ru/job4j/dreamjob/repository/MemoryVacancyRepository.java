@@ -50,6 +50,7 @@ public class MemoryVacancyRepository implements VacancyRepository {
             oldVacancy.setTitle(vacancy.getTitle());
             oldVacancy.setDescription(vacancy.getDescription());
             oldVacancy.setCreationDate(vacancy.getCreationDate());
+            oldVacancy.setVisible(vacancy.getVisible());
             return oldVacancy;
         }) != null;
     }

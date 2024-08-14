@@ -20,17 +20,17 @@ public class MemoryVacancyRepository implements VacancyRepository {
     private MemoryVacancyRepository() {
         LocalDateTime now = LocalDateTime.now();
         save(new Vacancy(0, "Intern Java Developer",
-                "Help with Java development tasks, suitable for beginners.", now, false));
+                "Help with Java development tasks, suitable for beginners.", now, false, 1));
         save(new Vacancy(0, "Junior Java Developer",
-                "Write simple Java code and perform tests. Some experience required.", now, false));
+                "Write simple Java code and perform tests. Some experience required.", now, false, 3));
         save(new Vacancy(0, "Junior+ Java Developer",
-                "Handle small projects, understand databases and web services.", now, false));
+                "Handle small projects, understand databases and web services.", now, false, 2));
         save(new Vacancy(0, "Middle Java Developer",
-                "Develop applications, work with Java frameworks like Spring.", now, false));
+                "Develop applications, work with Java frameworks like Spring.", now, false, 1));
         save(new Vacancy(0, "Middle+ Java Developer",
-                "Lead projects, design system architecture, mentor juniors.", now, false));
+                "Lead projects, design system architecture, mentor juniors.", now, false, 1));
         save(new Vacancy(0, "Senior Java Developer",
-                "Lead development teams, innovate with advanced Java technologies.", now, false));
+                "Lead development teams, innovate with advanced Java technologies.", now, false, 2));
     }
     @Override
     public Vacancy save(Vacancy vacancy) {
@@ -51,6 +51,7 @@ public class MemoryVacancyRepository implements VacancyRepository {
             oldVacancy.setDescription(vacancy.getDescription());
             oldVacancy.setCreationDate(vacancy.getCreationDate());
             oldVacancy.setVisible(vacancy.getVisible());
+            oldVacancy.setCityId(vacancy.getCityId());
             return oldVacancy;
         }) != null;
     }

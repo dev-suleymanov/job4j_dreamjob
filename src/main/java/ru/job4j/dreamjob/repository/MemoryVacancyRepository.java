@@ -20,17 +20,17 @@ public class MemoryVacancyRepository implements VacancyRepository {
     private MemoryVacancyRepository() {
         LocalDateTime now = LocalDateTime.now();
         save(new Vacancy(0, "Intern Java Developer",
-                "Help with Java development tasks, suitable for beginners.", now, false, 1));
+                "Help with Java development tasks, suitable for beginners.", now, true, 1, 0));
         save(new Vacancy(0, "Junior Java Developer",
-                "Write simple Java code and perform tests. Some experience required.", now, false, 3));
+                "Write simple Java code and perform tests. Some experience required.", now, true, 3, 0));
         save(new Vacancy(0, "Junior+ Java Developer",
-                "Handle small projects, understand databases and web services.", now, false, 2));
+                "Handle small projects, understand databases and web services.", now, true, 2, 0));
         save(new Vacancy(0, "Middle Java Developer",
-                "Develop applications, work with Java frameworks like Spring.", now, false, 1));
+                "Develop applications, work with Java frameworks like Spring.", now, true, 1, 0));
         save(new Vacancy(0, "Middle+ Java Developer",
-                "Lead projects, design system architecture, mentor juniors.", now, false, 1));
+                "Lead projects, design system architecture, mentor juniors.", now, true, 1, 0));
         save(new Vacancy(0, "Senior Java Developer",
-                "Lead development teams, innovate with advanced Java technologies.", now, false, 2));
+                "Lead development teams, innovate with advanced Java technologies.", now, true, 2, 0));
     }
     @Override
     public Vacancy save(Vacancy vacancy) {
@@ -52,6 +52,7 @@ public class MemoryVacancyRepository implements VacancyRepository {
             oldVacancy.setCreationDate(vacancy.getCreationDate());
             oldVacancy.setVisible(vacancy.getVisible());
             oldVacancy.setCityId(vacancy.getCityId());
+            oldVacancy.setFileId(vacancy.getFileId());
             return oldVacancy;
         }) != null;
     }

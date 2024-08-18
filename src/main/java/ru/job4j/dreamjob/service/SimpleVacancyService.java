@@ -2,8 +2,9 @@ package ru.job4j.dreamjob.service;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
+import ru.job4j.dreamjob.dto.FileDto;
+import ru.job4j.dreamjob.model.File;
 import ru.job4j.dreamjob.model.Vacancy;
-import ru.job4j.dreamjob.repository.MemoryVacancyRepository;
 import ru.job4j.dreamjob.repository.VacancyRepository;
 
 import java.util.Collection;
@@ -13,15 +14,23 @@ import java.util.Optional;
 @Service
 public class SimpleVacancyService implements VacancyService {
 
+    private final FileService fileService;
     private final VacancyRepository vacancyRepository;
 
-    public SimpleVacancyService(VacancyRepository vacancyRepository) {
+    public SimpleVacancyService(FileService fileService, VacancyRepository vacancyRepository) {
+        this.fileService = fileService;
         this.vacancyRepository = vacancyRepository;
     }
 
     @Override
-    public Vacancy save(Vacancy vacancy) {
+    public Vacancy save(Vacancy vacancy, FileDto image) {
+        saveNewFile(vacancy, image);
         return vacancyRepository.save(vacancy);
+    }
+
+    private void saveNewFile(Vacancy vacancy, FileDto image) {
+        File file = fileService.save(image);
+        vacancy.setFileId(file.getId());
     }
 
     @Override
@@ -29,8 +38,10 @@ public class SimpleVacancyService implements VacancyService {
         return vacancyRepository.deleteById(id);
     }
 
+
     @Override
-    public boolean update(Vacancy vacancy) {
+    public boolean update(Vacancy vacancy, FileDto image) {
+        saveNewFile(vacancy, image);
         return vacancyRepository.update(vacancy);
     }
 

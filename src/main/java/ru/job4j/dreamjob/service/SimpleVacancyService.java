@@ -29,20 +29,33 @@ public class SimpleVacancyService implements VacancyService {
     }
 
     private void saveNewFile(Vacancy vacancy, FileDto image) {
-        File file = fileService.save(image);
+        var file = fileService.save(image);
         vacancy.setFileId(file.getId());
     }
 
     @Override
     public boolean deleteById(int id) {
-        return vacancyRepository.deleteById(id);
+        var fileOptional = findById(id);
+        boolean deleteResult = false;
+        if (fileOptional.isPresent()) {
+            vacancyRepository.deleteById(id);
+            fileService.deleteById(fileOptional.get().getFileId());
+            deleteResult = true;
+        }
+        return deleteResult;
     }
-
 
     @Override
     public boolean update(Vacancy vacancy, FileDto image) {
+        var isNewFileEmpty = image.getContent().length == 0;
+        if (isNewFileEmpty) {
+            return vacancyRepository.update(vacancy);
+        }
+        var oldFileId = vacancy.getFileId();
         saveNewFile(vacancy, image);
-        return vacancyRepository.update(vacancy);
+        var isUpdated = vacancyRepository.update(vacancy);
+        fileService.deleteById(oldFileId);
+        return isUpdated;
     }
 
     @Override

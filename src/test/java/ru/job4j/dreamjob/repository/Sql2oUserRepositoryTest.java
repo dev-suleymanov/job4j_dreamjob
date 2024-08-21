@@ -48,13 +48,12 @@ class Sql2oUserRepositoryTest {
 
     @Test
     public void whenDuplicateEmailThenException() {
-        sql2oUserRepository.
-                save(new User(0, "test-mail@example.com", "test-user", "test-password")).get();
+        sql2oUserRepository.save(new User(0, "test-mail@example.com", "test-user", "test-password")).get();
         var exception = org.junit.jupiter.api.Assertions.assertThrows(
                 org.sql2o.Sql2oException.class, () -> {
-                    sql2oUserRepository.
-                            save(new User(0, "test-mail@example.com", "another-user", "another-password"));
+                    sql2oUserRepository.save(new User(0, "test-mail@example.com", "another-user", "another-password"));
                 });
-        assertThat(exception.getMessage()).contains("Нарушение уникального индекса");
+        System.out.println("Exception Message: " + exception.getMessage());
+        assertThat(exception.getMessage()).contains("Unique index or primary key violation");
     }
 }

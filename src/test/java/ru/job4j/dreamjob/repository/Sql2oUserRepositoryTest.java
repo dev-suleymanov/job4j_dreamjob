@@ -3,13 +3,16 @@ package ru.job4j.dreamjob.repository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.sql2o.Sql2o;
+import org.sql2o.Sql2oException;
 import ru.job4j.dreamjob.configuration.DatasourceConfiguration;
 import ru.job4j.dreamjob.model.User;
 
+import java.util.Optional;
 import java.util.Properties;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class Sql2oUserRepositoryTest {
     private static Sql2oUserRepository sql2oUserRepository;
@@ -48,12 +51,9 @@ class Sql2oUserRepositoryTest {
 
     @Test
     public void whenDuplicateEmailThenException() {
-        sql2oUserRepository.save(new User(0, "test-mail@example.com", "test-user", "test-password")).get();
-        var exception = org.junit.jupiter.api.Assertions.assertThrows(
-                org.sql2o.Sql2oException.class, () -> {
-                    sql2oUserRepository.save(new User(0, "test-mail@example.com", "another-user", "another-password"));
-                });
-        System.out.println("Exception Message: " + exception.getMessage());
-        assertThat(exception.getMessage()).contains("Unique index or primary key violation");
+        sql2oUserRepository.save(new User(0, "test-mail@example.com", "test-user", "test-password"));
+        var duplicateUser = sql2oUserRepository.
+                save(new User(0, "test-mail@example.com", "test2-user", "test2-password"));
+        assertThat(duplicateUser).isEqualTo(Optional.empty());
     }
 }

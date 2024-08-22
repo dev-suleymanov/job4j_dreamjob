@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String getRegistationPage(Model model) {
+    public String getRegistationPage() {
         return "users/register";
     }
 
@@ -32,6 +32,6 @@ public class UserController {
             model.addAttribute("message", "Пользователь с такой почтой уже существует");
             return "errors/404";
         }
-        return "redirect:/users";
+        return "redirect:/";
     }
 }

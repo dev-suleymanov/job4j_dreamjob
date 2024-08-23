@@ -7,10 +7,11 @@
           <a class="nav-item nav-link active" href="/">Главная</a>
           <a class="nav-item nav-link active" th:href="@{/vacancies}">Вакансии</a>
           <a class="nav-item nav-link active" th:href="@{/candidates}">Кандидаты</a>
-          <a class="nav-item nav-link active" th:href="@{/vacancies/create}">Создать вакансию</a>
-          <a class="nav-item nav-link active" th:href="@{/candidates/create}">Создать резюме</a>
-          <a class="nav-item nav-link active" th:href="@{/users/register}">Регистрация</a>
-          <a class="nav-item nav-link active" th:href="@{/users/login}">Войти</a>
+          <a class="nav-item nav-link active" th:href="@{/vacancies/create}" th:if="${user != null and user.name != 'Гость'}">Создать вакансию</a>
+          <a class="nav-item nav-link active" th:href="@{/candidates/create}" th:if="${user != null and user.name != 'Гость'}">Создать резюме</a>
+          <a class="nav-item nav-link active" th:href="@{/users/register}" th:if="${user != null and user.name == 'Гость'}">Регистрация</a>
+          <a class="nav-item nav-link active" th:href="@{/users/login}" th:if="${user != null and user.name == 'Гость'}">Войти</a>
+          <a class="nav-item nav-link active" th:href="@{/users/logout}" th:if="${user != null and user.name != 'Гость'}">Выйти</a>
         </div>
       </div>
     </div>

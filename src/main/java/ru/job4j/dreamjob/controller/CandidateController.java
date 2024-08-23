@@ -10,10 +10,12 @@ import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.service.CandidateService;
 import ru.job4j.dreamjob.service.CityService;
 
+import javax.servlet.http.HttpSession;
+
 @ThreadSafe
 @Controller
 @RequestMapping("/candidates")
-public class CandidateController {
+public class CandidateController extends BaseController {
 
     private final CandidateService candidateService;
 
@@ -25,14 +27,16 @@ public class CandidateController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpSession session) {
         model.addAttribute("candidates", candidateService.findAll());
+        addUserToModel(model, session);
         return "candidates/list";
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model) {
+    public String getCreationPage(Model model, HttpSession session) {
         model.addAttribute("cities", cityService.findAll());
+        addUserToModel(model, session);
         return "candidates/create";
     }
 
@@ -47,7 +51,7 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id) {
+    public String getById(Model model, @PathVariable int id, HttpSession session) {
         var candidateOptional = candidateService.findById(id);
         if (candidateOptional.isEmpty()) {
             model.addAttribute("message", "Кандидат с указанным идентификатором не найден");
@@ -55,6 +59,7 @@ public class CandidateController {
         }
         model.addAttribute("cities", cityService.findAll());
         model.addAttribute("candidate", candidateOptional.get());
+        addUserToModel(model, session);
         return "candidates/one";
     }
     @PostMapping("/update")

@@ -10,10 +10,12 @@ import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.service.CityService;
 import ru.job4j.dreamjob.service.VacancyService;
 
+import javax.servlet.http.HttpSession;
+
 @ThreadSafe
 @Controller
 @RequestMapping("/vacancies")
-public class VacancyController {
+public class VacancyController extends BaseController {
 
     private final VacancyService vacancyService;
 
@@ -25,14 +27,16 @@ public class VacancyController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpSession session) {
         model.addAttribute("vacancies", vacancyService.findAll());
+        addUserToModel(model, session);
         return "vacancies/list";
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model) {
+    public String getCreationPage(Model model, HttpSession session) {
         model.addAttribute("cities", cityService.findAll());
+        addUserToModel(model, session);
         return "vacancies/create";
     }
 
@@ -48,7 +52,7 @@ public class VacancyController {
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id) {
+    public String getById(Model model, @PathVariable int id, HttpSession session) {
         var vacancyOptional = vacancyService.findById(id);
         if (vacancyOptional.isEmpty()) {
             model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
@@ -56,6 +60,7 @@ public class VacancyController {
         }
         model.addAttribute("cities", cityService.findAll());
         model.addAttribute("vacancy", vacancyOptional.get());
+        addUserToModel(model, session);
         return "vacancies/one";
     }
 

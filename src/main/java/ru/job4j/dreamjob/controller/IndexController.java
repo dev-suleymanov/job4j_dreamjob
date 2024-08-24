@@ -10,11 +10,16 @@ import javax.servlet.http.HttpSession;
 
 @ThreadSafe
 @Controller
-public class IndexController extends BaseController {
+public class IndexController {
 
     @GetMapping({"/", "/index"})
     public String getIndex(Model model, HttpSession session) {
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "index";
     }
 }

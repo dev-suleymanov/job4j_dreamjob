@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 @ThreadSafe
 @Controller
 @RequestMapping("/users")
-public class UserController extends BaseController {
+public class UserController {
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -25,7 +25,12 @@ public class UserController extends BaseController {
 
     @GetMapping("/register")
     public String getRegistationPage(Model model, HttpSession session) {
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "users/register";
     }
 
@@ -41,12 +46,17 @@ public class UserController extends BaseController {
 
     @GetMapping("/login")
     public String getLoginPage(Model model, HttpSession session) {
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "users/login";
     }
 
     @PostMapping("/login")
-    public String loginUser(@ModelAttribute User user, Model model, HttpServletRequest request, HttpSession httpSession) {
+    public String loginUser(@ModelAttribute User user, Model model, HttpServletRequest request) {
         var userOptional = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
         if (userOptional.isEmpty()) {
             model.addAttribute("error", "Почта или пароль введены неверно");

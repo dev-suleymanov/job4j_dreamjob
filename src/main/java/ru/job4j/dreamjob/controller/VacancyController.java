@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.dto.FileDto;
+import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.service.CityService;
 import ru.job4j.dreamjob.service.VacancyService;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpSession;
 @ThreadSafe
 @Controller
 @RequestMapping("/vacancies")
-public class VacancyController extends BaseController {
+public class VacancyController {
 
     private final VacancyService vacancyService;
 
@@ -29,14 +30,24 @@ public class VacancyController extends BaseController {
     @GetMapping
     public String getAll(Model model, HttpSession session) {
         model.addAttribute("vacancies", vacancyService.findAll());
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "vacancies/list";
     }
 
     @GetMapping("/create")
     public String getCreationPage(Model model, HttpSession session) {
         model.addAttribute("cities", cityService.findAll());
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "vacancies/create";
     }
 
@@ -60,7 +71,12 @@ public class VacancyController extends BaseController {
         }
         model.addAttribute("cities", cityService.findAll());
         model.addAttribute("vacancy", vacancyOptional.get());
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "vacancies/one";
     }
 

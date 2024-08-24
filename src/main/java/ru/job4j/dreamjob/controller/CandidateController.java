@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.dto.FileDto;
 import ru.job4j.dreamjob.model.Candidate;
+import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.service.CandidateService;
 import ru.job4j.dreamjob.service.CityService;
 
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpSession;
 @ThreadSafe
 @Controller
 @RequestMapping("/candidates")
-public class CandidateController extends BaseController {
+public class CandidateController {
 
     private final CandidateService candidateService;
 
@@ -29,14 +30,24 @@ public class CandidateController extends BaseController {
     @GetMapping
     public String getAll(Model model, HttpSession session) {
         model.addAttribute("candidates", candidateService.findAll());
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "candidates/list";
     }
 
     @GetMapping("/create")
     public String getCreationPage(Model model, HttpSession session) {
         model.addAttribute("cities", cityService.findAll());
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "candidates/create";
     }
 
@@ -59,7 +70,12 @@ public class CandidateController extends BaseController {
         }
         model.addAttribute("cities", cityService.findAll());
         model.addAttribute("candidate", candidateOptional.get());
-        addUserToModel(model, session);
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
         return "candidates/one";
     }
     @PostMapping("/update")

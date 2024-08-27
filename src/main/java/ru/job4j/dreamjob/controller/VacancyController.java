@@ -10,8 +10,6 @@ import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.service.CityService;
 import ru.job4j.dreamjob.service.VacancyService;
 
-import javax.servlet.http.HttpSession;
-
 @ThreadSafe
 @Controller
 @RequestMapping("/vacancies")
@@ -33,7 +31,7 @@ public class VacancyController {
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model, HttpSession session) {
+    public String getCreationPage(Model model) {
         model.addAttribute("cities", cityService.findAll());
         return "vacancies/create";
     }
